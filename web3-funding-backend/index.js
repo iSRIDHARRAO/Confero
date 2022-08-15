@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const connection = mysql.createConnection({
     host: 'database-1.cchmrql77pxo.ap-south-1.rds.amazonaws.com',
     user: 'admin',
-    password: '6302510466mummy',
+    password: '',
     database: 'confero'
 })
 

@@ -62,11 +62,9 @@
  
  *3.Python to implement Machine Learning model of Brain Tumor prediction*
  
- *4.IPFS as static file storage to save images after predicting Brain Tumor*
+ *4.MySql as backend to store user info ( We've used RDS service from AWS )*
  
- *5.MySql as backend to store user info ( We've used RDS service from AWS )*
+ *5.Smartpy to create Tezos smart contract in order to perform transactions like donations, withdraw*
  
- *6.Smartpy to create Tezos smart contract in order to perform transactions like donations, withdraw*
- 
- Smart Contract Address on Jakarta Network :-
+ Smart Contract Address on Jakarta Network :- 
  #### Link to demo video :- 

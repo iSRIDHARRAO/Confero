@@ -66,5 +66,5 @@
  
  *5.Smartpy to create Tezos smart contract in order to perform transactions like donations, withdraw*
  
- Smart Contract Address on Jakarta Network :- 
- #### Link to demo video :- 
+ Smart Contract Address on Jakarta Network :- KT1X5Axj6T2TGqcr3cgD9J5FoUA3qnDZS46U
+ #### Link to demo video :- [Link to Video](https://youtu.be/BY_BMQbK_zE)

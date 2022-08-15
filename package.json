@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@taquito/beacon-wallet": "^13.0.1",
+    "@taquito/taquito": "^13.0.1"
+  }
+}

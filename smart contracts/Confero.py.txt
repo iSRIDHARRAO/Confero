@@ -1,0 +1,82 @@
+import smartpy as sp
+
+class Confero(sp.Contract):
+    def __init__(self):
+        self.init(
+            raised_amount = sp.map(l={}, tkey=sp.TAddress, tvalue=sp.TMutez) ,
+            expected_amount = sp.map(l={}, tkey=sp.TAddress, tvalue=sp.TMutez) ,
+            available_amount = sp.map(l={}, tkey=sp.TAddress, tvalue=sp.TMutez) ,
+            donations = sp.map(l={}, tkey=sp.TAddress, tvalue=sp.TMutez),
+            minimum_amount = sp.tez(1),
+
+        )
+    @sp.entry_point
+    def fundraiser(self,raised_amount):
+        sp.set_type(raised_amount,sp.TMutez)
+        # sp.verify(self.data.expected_amount[sp.sender] > sp.TMutez(1000000),"Already raised")
+        self.data.raised_amount[sp.sender]=raised_amount
+        self.data.expected_amount[sp.sender]=raised_amount
+        self.data.available_amount[sp.sender]=sp.tez(0)    
+    
+
+    @sp.entry_point
+    def donor(self,params):
+        # Sanity checks
+        sp.set_type(params,sp.TRecord(to_address=sp.TAddress))
+
+        # sp.verify(self.data.raised_amount[to_address] > sp.TMutez(1000000),"NO FUND RAISERS with that Id")
+        sp.verify(sp.amount >= self.data.minimum_amount, "INVALID AMOUNT")
+        self.data.donations[sp.sender] = sp.amount
+        self.data.available_amount[params.to_address] = self.data.available_amount[params.to_address] + sp.amount
+        self.data.expected_amount[params.to_address] = self.data.expected_amount[params.to_address] - sp.amount
+
+    @sp.entry_point
+    def withdraw(self):
+        sp.verify(self.data.available_amount[sp.sender] > sp.tez(0), " INSUFFICIENT FUNDS ")
+        sp.send(sp.sender,self.data.available_amount[sp.sender])
+        self.data.available_amount[sp.sender]=sp.tez(0)    
+
+        # Sanity checks
+        # sp.verify(self.data.tickets_available == 0, "GAME IS YET TO END")
+
+        # Pick a winner
+        # winner_id = sp.as_nat(sp.now - sp.timestamp(0)) % self.data.max_tickets
+        # winner_address = self.data.players[winner_id]
+
+        # Send the reward to the winner
+        # sp.send(winner_address, sp.balance)
+
+        # Reset the game
+        # self.data.players = {}
+        # self.data.tickets_available = self.data.max_tickets
+
+@sp.add_test(name = "main")
+def test():
+    scenario = sp.test_scenario()
+    # Test accounts
+    # admin = sp.test_account("admin")
+    alice = sp.test_account("alice")
+    bob = sp.test_account("bob")
+    mike = sp.test_account("mike")
+    charles = sp.test_account("charles")
+    john = sp.test_account("john")
+    # Contract instance
+    instance = Confero()
+    scenario += instance
+    scenario += instance.fundraiser(sp.mutez(5000000)).run(sender=alice)
+    scenario += instance.donor(to_address=alice.address).run(amount=sp.tez(1),sender=bob)
+    scenario += instance.donor(to_address=alice.address).run(amount=sp.tez(1),sender=mike)
+    scenario += instance.withdraw().run(sender=alice)
+
+    # # buy_ticket
+    # scenario.h2("buy_ticket (valid test)")
+    # scenario += lottery.buy_ticket().run(amount = sp.tez(1), sender = alice)
+    # scenario += lottery.buy_ticket().run(amount = sp.tez(2), sender = bob)
+    # scenario += lottery.buy_ticket().run(amount = sp.tez(3), sender = john)
+    # scenario += lottery.buy_ticket().run(amount = sp.tez(1), sender = charles)
+    # scenario += lottery.buy_ticket().run(amount = sp.tez(1), sender = mike)
+    # scenario.h2("buy_ticket (failure test)")
+    # scenario += lottery.buy_ticket().run(amount = sp.tez(1), sender = alice, valid = False)
+    # end_game
+    # scenario.h2("end_game (valid test)")
+    # scenario += lottery.end_game(21).run(sender = admin)
